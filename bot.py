@@ -4,6 +4,7 @@ import asyncio
 import re
 import logging
 from datetime import datetime
+from keep_alive import keep_alive
 from aiogram import Bot, Dispatcher, Router, F, types
 from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
@@ -12,8 +13,8 @@ from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 # ================= НАСТРОЙКИ =================
-BOT_TOKEN = "8644340948:AAHmJUhdgsJ8xME3fgg9NFPskxLF4PwWkiE"
-ADMIN_ID = 8072437666
+BOT_TOKEN = os.environ.get("BOT_TOKEN")
+ADMIN_ID = int(os.environ.get("ADMIN_ID", "0"))
 DATA_FILE = "data.json"
 # =============================================
 
@@ -1340,13 +1341,15 @@ async def handle_any_message(message: types.Message, state: FSMContext):
     await message.answer(text, parse_mode="Markdown", reply_markup=get_main_menu_keyboard(message.from_user.id))
 
 async def main():
+    keep_alive()  # <-- ЭТА СТРОКА ОБЯЗАТЕЛЬНА
+    
     print("=" * 60)
     print("✅ БОТ УСПЕШНО ЗАПУЩЕН И ГОТОВ К РАБОТЕ!")
     print("=" * 60)
     print(f"ADMIN_ID: {ADMIN_ID}")
     print(f"Bot ID: {bot.id}")
     print("=" * 60)
-    print("📊 Панель администратора доступна через главное меню")
+    print(" Панель администратора доступна через главное меню")
     print("=" * 60)
     await dp.start_polling(bot)
 
